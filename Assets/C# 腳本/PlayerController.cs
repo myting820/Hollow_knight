@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,30 +15,30 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 1. ²¾°Ê
+        // 1. ç§»å‹•
         moveInput = Input.GetAxisRaw("Horizontal");
         movement.Move(moveInput);
 
-        // 2. ¸õÅD
+        // 2. è·³èº
         if (Input.GetKeyDown(KeyCode.Space))
         {
             movement.Jump();
         }
 
-        // 3. ½Ä¨ë
+        // 3. è¡åˆº
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             movement.Dash();
         }
 
-        // 4. §ğÀ» (¶Ç¤J Vertical ¿é¤J)
+        // 4. æ”»æ“Š (å‚³å…¥ Vertical è¼¸å…¥)
         if (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))
         {
-            // GetAxisRaw("Vertical") ·|¦^¶Ç 1 (¤W), -1 (¤U), 0 (¨S«ö)
+            // GetAxisRaw("Vertical") æœƒå›å‚³ 1 (ä¸Š), -1 (ä¸‹), 0 (æ²’æŒ‰)
             combat.Attack(Input.GetAxisRaw("Vertical"));
         }
 
-        // ·s¼W¡GÅ]ªk («ö K)
+        // æ–°å¢ï¼šé­”æ³• (æŒ‰ K)
         if (Input.GetKeyDown(KeyCode.E))
         {
             combat.CastSpell();

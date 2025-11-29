@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 20f;       // ­¸¦æ³t«×
-    public int damage = 10;         // ¶Ë®`
-    public float lifeTime = 2f;     // ¦s¬¡®É¶¡ (Á×§K­¸¨ìµL½a»·)
-    public GameObject hitEffect;    // ¼²À»¯S®Ä(¿ï¥Î)
+    public float speed = 20f;       // é£›è¡Œé€Ÿåº¦
+    public int damage = 10;         // å‚·å®³
+    public float lifeTime = 2f;     // å­˜æ´»æ™‚é–“ (é¿å…é£›åˆ°ç„¡çª®é )
+    public GameObject hitEffect;    // æ’æ“Šç‰¹æ•ˆ(é¸ç”¨)
 
     private Rigidbody2D rb;
 
@@ -13,26 +13,26 @@ public class Projectile : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // ³]©wªì³t«× (¦V¥k­¸)
-        // ª`·N¡G§Ú­Ì·|³z¹L±ÛÂàª«¥ó¨Ó±±¨î¥¦¬O¦V¥ªÁÙ¬O¦V¥k­¸¡A©Ò¥H³o¸Ì¥Ã»·¼g transform.right
+        // è¨­å®šåˆé€Ÿåº¦ (å‘å³é£›)
+        // æ³¨æ„ï¼šæˆ‘å€‘æœƒé€éæ—‹è½‰ç‰©ä»¶ä¾†æ§åˆ¶å®ƒæ˜¯å‘å·¦é‚„æ˜¯å‘å³é£›ï¼Œæ‰€ä»¥é€™è£¡æ°¸é å¯« transform.right
         rb.linearVelocity = transform.right * speed;
 
-        // ®É¶¡¨ì¦Û°Ê¾P·´
+        // æ™‚é–“åˆ°è‡ªå‹•éŠ·æ¯€
         Destroy(gameObject, lifeTime);
     }
 
     void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        // 1. ¸I¨ì¼Ä¤H
+        // 1. ç¢°åˆ°æ•µäºº
         Enemy enemy = hitInfo.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            //DestroyProjectile(); // ¼²¨ì¤H´N®ø¥¢
+            //DestroyProjectile(); // æ’åˆ°äººå°±æ¶ˆå¤±
         }
 
-        //// 2. ¸I¨ìÀğ¾À (°²³]Àğ¾À¹Ï¼h¥s°µ Ground)
-        //// §A¥i¥H¥Î tag §PÂ_¡A©Î¬OÀË¬d layer
+        //// 2. ç¢°åˆ°ç‰†å£ (å‡è¨­ç‰†å£åœ–å±¤å«åš Ground)
+        //// ä½ å¯ä»¥ç”¨ tag åˆ¤æ–·ï¼Œæˆ–æ˜¯æª¢æŸ¥ layer
         //if (hitInfo.gameObject.layer == LayerMask.NameToLayer("Ground"))
         //{
         //    DestroyProjectile();
@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
 
     void DestroyProjectile()
     {
-        // ¦pªG¦³°µÃz¬µ¯S®Ä¡A¦b³o¸Ì¥Í¦¨
+        // å¦‚æœæœ‰åšçˆ†ç‚¸ç‰¹æ•ˆï¼Œåœ¨é€™è£¡ç”Ÿæˆ
         // if (hitEffect != null) Instantiate(hitEffect, transform.position, Quaternion.identity);
 
         Destroy(gameObject);

@@ -1,33 +1,33 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // ... (­ì¥»ªº¼Æ­È«O«ù¤£ÅÜ) ...
-    [Header("°òÂ¦¼Æ­È")]
+    // ... (åŸæœ¬çš„æ•¸å€¼ä¿æŒä¸è®Š) ...
+    [Header("åŸºç¤æ•¸å€¼")]
     public float moveSpeed = 8f;
     public float jumpForce = 22f;
 
-    [Header("½Ä¨ë³]©w")]
+    [Header("è¡åˆºè¨­å®š")]
     public float dashSpeed = 20f;
     public float dashTime = 0.2f;
     public float dashCooldown = 0.4f;
 
-    [Header("ÃŞÀğ¸õ³]©w")]
+    [Header("è¹¬ç‰†è·³è¨­å®š")]
     public float wallSlidingSpeed = 2f;
     public Vector2 wallJumpPower = new Vector2(10f, 25f);
     public float wallJumpDuration = 0.2f;
 
-    [Header("¤U¼A³]©w")]
+    [Header("ä¸‹åŠˆè¨­å®š")]
     public float pogoForce = 18f;
 
-    [Header("°»´ú³]©w")]
+    [Header("åµæ¸¬è¨­å®š")]
     public Transform groundCheck;
     public Transform wallCheck;
     public float checkRadius = 0.2f;
     public LayerMask whatIsGround;
 
-    // --- ¤º³¡ª¬ºA ---
+    // --- å…§éƒ¨ç‹€æ…‹ ---
     private Rigidbody2D rb;
     public int facingDirection { get; private set; } = 1;
     public bool isGrounded { get; private set; }
@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isDashing { get; private set; }
     public bool isWallJumping { get; private set; }
 
-    // ¡i·s¼W¡jÀ»°hª¬ºA¡G¦pªG¥¿¦b³QÀ»°h¡A´N¤½¶}Åı Controller ª¾¹D
+    // ã€æ–°å¢ã€‘æ“Šé€€ç‹€æ…‹ï¼šå¦‚æœæ­£åœ¨è¢«æ“Šé€€ï¼Œå°±å…¬é–‹è®“ Controller çŸ¥é“
     public bool isKnockedBack { get; private set; }
 
     private bool canDoubleJump;
@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(float input)
     {
-        // ¡i­×§ï¡j¥[¤J isKnockedBack ÀË¬d¡G¦pªG¥¿¦b³QÀ»°h¡A¤£¯à±±¨î²¾°Ê
+        // ã€ä¿®æ”¹ã€‘åŠ å…¥ isKnockedBack æª¢æŸ¥ï¼šå¦‚æœæ­£åœ¨è¢«æ“Šé€€ï¼Œä¸èƒ½æ§åˆ¶ç§»å‹•
         if (isDashing || isWallJumping || isKnockedBack) return;
 
         rb.linearVelocity = new Vector2(input * moveSpeed, rb.linearVelocity.y);
@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        // ¡i­×§ï¡j¥[¤J isKnockedBack ÀË¬d
+        // ã€ä¿®æ”¹ã€‘åŠ å…¥ isKnockedBack æª¢æŸ¥
         if (isKnockedBack) return;
 
         if (isWallSliding) StartCoroutine(WallJumpRoutine());
@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Dash()
     {
-        // ¡i­×§ï¡j¥[¤J isKnockedBack ÀË¬d
+        // ã€ä¿®æ”¹ã€‘åŠ å…¥ isKnockedBack æª¢æŸ¥
         if (isKnockedBack) return;
 
         if (canDash && (isGrounded || !hasDashedInAir)) StartCoroutine(DashRoutine());
@@ -93,8 +93,8 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
 
-    // --- ¡i·s¼W¡jÀ»°h¥\¯à ---
-    // °Ñ¼Æ¡G¤è¦V¤O¹D (Vector2)¡B«ùÄò®É¶¡ (float)
+    // --- ã€æ–°å¢ã€‘æ“Šé€€åŠŸèƒ½ ---
+    // åƒæ•¸ï¼šæ–¹å‘åŠ›é“ (Vector2)ã€æŒçºŒæ™‚é–“ (float)
     public void ApplyKnockback(Vector2 knockbackForce, float duration)
     {
         StartCoroutine(KnockbackRoutine(knockbackForce, duration));
@@ -104,25 +104,25 @@ public class PlayerMovement : MonoBehaviour
     {
         isKnockedBack = true;
 
-        // 1. ­«¸m·í«e³t«× (Á×§K³Q¤§«eªººD©Ê¼vÅT)
+        // 1. é‡ç½®ç•¶å‰é€Ÿåº¦ (é¿å…è¢«ä¹‹å‰çš„æ…£æ€§å½±éŸ¿)
         rb.linearVelocity = Vector2.zero;
 
-        // 2. ¬I¥[À»°h¤O (¦V«á¤W¤è­¸)
+        // 2. æ–½åŠ æ“Šé€€åŠ› (å‘å¾Œä¸Šæ–¹é£›)
         rb.linearVelocity = knockbackForce;
 
-        // 3. µ¥«İÀ»°h®É¶¡ (³o¬q®É¶¡ª±®a¥¢¥h±±¨î)
+        // 3. ç­‰å¾…æ“Šé€€æ™‚é–“ (é€™æ®µæ™‚é–“ç©å®¶å¤±å»æ§åˆ¶)
         yield return new WaitForSeconds(duration);
 
-        // 4. «ì´_±±¨î
-        // (¬°¤F¤â·P¡A¥i¥H§â³t«×Âk¹s¡A©ÎªÌÅı­«¤O¦ÛµM±µºŞ¡A³o¸Ì§Ú­ÌÅı­«¤O±µºŞ)
+        // 4. æ¢å¾©æ§åˆ¶
+        // (ç‚ºäº†æ‰‹æ„Ÿï¼Œå¯ä»¥æŠŠé€Ÿåº¦æ­¸é›¶ï¼Œæˆ–è€…è®“é‡åŠ›è‡ªç„¶æ¥ç®¡ï¼Œé€™è£¡æˆ‘å€‘è®“é‡åŠ›æ¥ç®¡)
         isKnockedBack = false;
 
-        // ¥i¿ï¡GÀ»°hµ²§ô«áµy·L´î³t¡AÁ×§K·Æ¤Ó»·
+        // å¯é¸ï¼šæ“Šé€€çµæŸå¾Œç¨å¾®æ¸›é€Ÿï¼Œé¿å…æ»‘å¤ªé 
         rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
     }
 
-    // ... (³Ñ¤Uªº PerformJump, Flip, CheckSurroundings µ¥«O«ù¤£ÅÜ) ...
-    // ... (¬°¸`¬Ùª©­±¡A½Ğ«O¯d§A­ì¥»¤U­±ªºµ{¦¡½X) ...
+    // ... (å‰©ä¸‹çš„ PerformJump, Flip, CheckSurroundings ç­‰ä¿æŒä¸è®Š) ...
+    // ... (ç‚ºç¯€çœç‰ˆé¢ï¼Œè«‹ä¿ç•™ä½ åŸæœ¬ä¸‹é¢çš„ç¨‹å¼ç¢¼) ...
     private void PerformJump() { rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); }
     private void Flip() { facingDirection *= -1; transform.localScale = new Vector3(facingDirection, 1, 1); }
     private void CheckSurroundings()

@@ -1,20 +1,20 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("¦å¶q³]©w")]
+    [Header("è¡€é‡è¨­å®š")]
     public int maxHealth = 5;
     public int currentHealth;
 
-    [Header("µL¼Ä®É¶¡³]©w")]
-    public float invincibilityDuration = 0.75f; // §A­è­è½Õ¾ãªº 0.75
+    [Header("ç„¡æ•µæ™‚é–“è¨­å®š")]
+    public float invincibilityDuration = 0.75f; // ä½ å‰›å‰›èª¿æ•´çš„ 0.75
     public float flashDuration = 0.08f;
 
-    [Header("À»°h³]©w")]
-    public float knockbackForceX = 10f; // ¤ô¥­À»°h¤O
-    public float knockbackForceY = 5f;  // ««ª½À»°h¤O (µy·L©¹¤W¼u)
-    public float knockbackDuration = 0.2f; // À»°h¥¢±±®É¶¡
+    [Header("æ“Šé€€è¨­å®š")]
+    public float knockbackForceX = 10f; // æ°´å¹³æ“Šé€€åŠ›
+    public float knockbackForceY = 5f;  // å‚ç›´æ“Šé€€åŠ› (ç¨å¾®å¾€ä¸Šå½ˆ)
+    public float knockbackDuration = 0.2f; // æ“Šé€€å¤±æ§æ™‚é–“
 
     public HealthUI healthUI;
 
@@ -22,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    // 1. ·s¼W¡G¥Î¨ÓÅª¨ú¥D¨¤²¾°Êª¬ºA
+    // 1. æ–°å¢ï¼šç”¨ä¾†è®€å–ä¸»è§’ç§»å‹•ç‹€æ…‹
     private PlayerMovement movement;
 
     void Start()
@@ -31,14 +31,14 @@ public class PlayerHealth : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
-        // 2. §ì¨ú¦P¤@ª«¥ó¨­¤Wªº PlayerMovement ²Õ¥ó
+        // 2. æŠ“å–åŒä¸€ç‰©ä»¶èº«ä¸Šçš„ PlayerMovement çµ„ä»¶
         movement = GetComponent<PlayerMovement>();
 
-        // ¡i·s¼W¡j¹CÀ¸¶}©l®É¡Aªì©l¤Æ UI
+        // ã€æ–°å¢ã€‘éŠæˆ²é–‹å§‹æ™‚ï¼Œåˆå§‹åŒ– UI
         if (healthUI != null)
         {
             healthUI.InitHealth(maxHealth);
-            healthUI.UpdateHealth(currentHealth); // ½T«O¤@¶}©l¬Oº¡ªº
+            healthUI.UpdateHealth(currentHealth); // ç¢ºä¿ä¸€é–‹å§‹æ˜¯æ»¿çš„
         }
     }
 
@@ -46,16 +46,16 @@ public class PlayerHealth : MonoBehaviour
     {
         if (movement != null && movement.isDashing)
         {
-            Debug.Log("½Ä¨ëµL¼Ä¤¤¡A§K¬Ì¶Ë®`¡I");
+            Debug.Log("è¡åˆºç„¡æ•µä¸­ï¼Œå…ç–«å‚·å®³ï¼");
             return;
         }
 
         if (isInvincible) return;
 
         currentHealth -= damage;
-        Debug.Log("ª±®a¨ü¶Ë¡I³Ñ¾l¦å¶q¡G" + currentHealth);
+        Debug.Log("ç©å®¶å—å‚·ï¼å‰©é¤˜è¡€é‡ï¼š" + currentHealth);
 
-        // ¡i·s¼W¡j¨ü¶Ë®É³qª¾ UI §ó·s
+        // ã€æ–°å¢ã€‘å—å‚·æ™‚é€šçŸ¥ UI æ›´æ–°
         if (healthUI != null)
         {
             healthUI.UpdateHealth(currentHealth);
@@ -63,17 +63,17 @@ public class PlayerHealth : MonoBehaviour
 
         if (animator != null) animator.SetTrigger("HurtTrigger");
 
-        // --- ¡i·s¼W¡j­pºâÀ»°h ---
+        // --- ã€æ–°å¢ã€‘è¨ˆç®—æ“Šé€€ ---
         if (movement != null && source != null)
         {
-            // 1. ­pºâ¤è¦V¡G(¥D¨¤¦ì¸m - ¼Ä¤H¦ì¸m) = ©¹¤Ï¤è¦V­¸
-            // §Ú­Ì¥uÃö¤ß¥ª¥k¤è¦V¡A©Ò¥H¥u¬İ x
+            // 1. è¨ˆç®—æ–¹å‘ï¼š(ä¸»è§’ä½ç½® - æ•µäººä½ç½®) = å¾€åæ–¹å‘é£›
+            // æˆ‘å€‘åªé—œå¿ƒå·¦å³æ–¹å‘ï¼Œæ‰€ä»¥åªçœ‹ x
             int direction = transform.position.x > source.position.x ? 1 : -1;
 
-            // 2. ²Õ¦X¤O¹D¦V¶q (X:¤Ï¤è¦V¤O¹D, Y:µy·L¦V¤W)
+            // 2. çµ„åˆåŠ›é“å‘é‡ (X:åæ–¹å‘åŠ›é“, Y:ç¨å¾®å‘ä¸Š)
             Vector2 knockbackVector = new Vector2(direction * knockbackForceX, knockbackForceY);
 
-            // 3. ©I¥s Movement °õ¦æ
+            // 3. å‘¼å« Movement åŸ·è¡Œ
             movement.ApplyKnockback(knockbackVector, knockbackDuration);
         }
 
@@ -88,7 +88,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("ª±®a¦º¤`¡I");
+        Debug.Log("ç©å®¶æ­»äº¡ï¼");
         Time.timeScale = 0;
     }
 

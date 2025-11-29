@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log(name + " ¨ü¨ì¤F " + damage + " ÂI¶Ë®`¡I");
+        Debug.Log(name + " å—åˆ°äº† " + damage + " é»å‚·å®³ï¼");
 
         StartCoroutine(FlashColor());
 
@@ -25,8 +25,8 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        Debug.Log(name + " ¦º¤`¡I");
-        // ¼È®É¥uÁôÂÃ¡AÁ×§K³ø¿ù
+        Debug.Log(name + " æ­»äº¡ï¼");
+        // æš«æ™‚åªéš±è—ï¼Œé¿å…å ±éŒ¯
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
     }

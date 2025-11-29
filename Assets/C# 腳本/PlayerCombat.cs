@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class PlayerCombat : MonoBehaviour
 {
-    [Header("§ğÀ»¼Æ­È")]
+    [Header("æ”»æ“Šæ•¸å€¼")]
     public int attackDamage = 20;
     public Vector2 attackArea = new Vector2(1.5f, 0.5f);
     public float attackRate = 2f;
     private float nextAttackTime = 0f;
 
-    [Header("Å]ªk³]©w")]
-    public GameObject fireballPrefab; // ¤õ²yªº¼Ë¥»
-    public Transform firePoint;       // ¤õ²yµo®g¦ì¸m
-    public float fireRate = 1f;       // Å]ªk§N«o
+    [Header("é­”æ³•è¨­å®š")]
+    public GameObject fireballPrefab; // ç«çƒçš„æ¨£æœ¬
+    public Transform firePoint;       // ç«çƒç™¼å°„ä½ç½®
+    public float fireRate = 1f;       // é­”æ³•å†·å»
     private float nextFireTime = 0f;
 
-    [Header("³]©w")]
+    [Header("è¨­å®š")]
     public Transform attackPoint;
     public GameObject slashEffect;
     public LayerMask enemyLayers;
@@ -42,8 +42,8 @@ public class PlayerCombat : MonoBehaviour
 
         StartCoroutine(ShowSlashEffect());
 
-        // --- ³B²z§ğÀ»¤è¦V»P±ÛÂà ---
-        // (³o¸ÌªºÅŞ¿è«O«ù¤£ÅÜ¡A¦]¬°¤è§Î·|¸òµÛ AttackPoint ªº±ÛÂà¨¤«×¨«)
+        // --- è™•ç†æ”»æ“Šæ–¹å‘èˆ‡æ—‹è½‰ ---
+        // (é€™è£¡çš„é‚è¼¯ä¿æŒä¸è®Šï¼Œå› ç‚ºæ–¹å½¢æœƒè·Ÿè‘— AttackPoint çš„æ—‹è½‰è§’åº¦èµ°)
         if (!movement.isGrounded && yInput < 0)
         {
             attackPoint.localPosition = new Vector3(0, -1f, 0);
@@ -60,8 +60,8 @@ public class PlayerCombat : MonoBehaviour
             attackPoint.localRotation = Quaternion.Euler(0, 0, 0);
         }
 
-        // --- ­×§ï 2: °»´ú©R¤¤§ï¥Î OverlapBoxAll ---
-        // °Ñ¼Æ»¡©ú: (¤¤¤ßÂI, ªø¼e¤Ø¤o, ±ÛÂà¨¤«×, ¹Ï¼h)
+        // --- ä¿®æ”¹ 2: åµæ¸¬å‘½ä¸­æ”¹ç”¨ OverlapBoxAll ---
+        // åƒæ•¸èªªæ˜: (ä¸­å¿ƒé», é•·å¯¬å°ºå¯¸, æ—‹è½‰è§’åº¦, åœ–å±¤)
         Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(attackPoint.position, attackArea, attackPoint.eulerAngles.z, enemyLayers);
 
         foreach (Collider2D enemy in hitEnemies)
@@ -75,21 +75,21 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    // ¬Iªk¨ç¦¡
+    // æ–½æ³•å‡½å¼
     public void CastSpell()
     {
         if (Time.time < nextFireTime) return;
 
-        // TODO: ÀË¬dÅ]¤O°÷¤£°÷ (¤§«á°µ Soul ¨t²Î®É¥[)
+        // TODO: æª¢æŸ¥é­”åŠ›å¤ ä¸å¤  (ä¹‹å¾Œåš Soul ç³»çµ±æ™‚åŠ )
 
         nextFireTime = Time.time + 1f / fireRate;
 
-        // 1. ¼½©ñ°Êµe (¦pªG¦³)
+        // 1. æ’­æ”¾å‹•ç•« (å¦‚æœæœ‰)
         // if (animator != null) animator.SetTrigger("CastTrigger");
 
-        // 2. ¥Í¦¨¤õ²y
-        // ®Ú¾Ú¥D¨¤­±¦V¡A¨M©wµo®gÂIªº¨¤«×
-        // ¦pªG¥D¨¤­±¦V¥ªÃä (Scale X = -1)¡A§Ú­Ì­n§âµo®gÂI±ÛÂà 180 «×¡A¤õ²y¤~·|©¹¥ª­¸
+        // 2. ç”Ÿæˆç«çƒ
+        // æ ¹æ“šä¸»è§’é¢å‘ï¼Œæ±ºå®šç™¼å°„é»çš„è§’åº¦
+        // å¦‚æœä¸»è§’é¢å‘å·¦é‚Š (Scale X = -1)ï¼Œæˆ‘å€‘è¦æŠŠç™¼å°„é»æ—‹è½‰ 180 åº¦ï¼Œç«çƒæ‰æœƒå¾€å·¦é£›
         Quaternion rotation = transform.localScale.x > 0 ? Quaternion.identity : Quaternion.Euler(0, 180, 0);
 
         Instantiate(fireballPrefab, firePoint.position, rotation);
@@ -104,15 +104,15 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    // ­×§ï 3: Åı½s¿è¾¹µe¥X¤è§Î¡A¤è«K§A½Õ¾ã
+    // ä¿®æ”¹ 3: è®“ç·¨è¼¯å™¨ç•«å‡ºæ–¹å½¢ï¼Œæ–¹ä¾¿ä½ èª¿æ•´
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;
 
         Gizmos.color = Color.red;
-        // ³o¦æÅ]ªk¬O¬°¤FÅıµe¥X¨Óªº¬õ¦â®Ø®Ø¸òµÛª«Åé±ÛÂà
+        // é€™è¡Œé­”æ³•æ˜¯ç‚ºäº†è®“ç•«å‡ºä¾†çš„ç´…è‰²æ¡†æ¡†è·Ÿè‘—ç‰©é«”æ—‹è½‰
         Gizmos.matrix = Matrix4x4.TRS(attackPoint.position, attackPoint.rotation, Vector3.one);
-        // µe¥X½u®Ø¤è¶ô
+        // ç•«å‡ºç·šæ¡†æ–¹å¡Š
         Gizmos.DrawWireCube(Vector3.zero, attackArea);
     }
 }

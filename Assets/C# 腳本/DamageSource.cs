@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class DamageSource : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class DamageSource : MonoBehaviour
 
         if (health != null)
         {
-            // ¡i­×§ï¡j§â transform (¦Û¤v) ¶Ç¶i¥h
+            // ã€ä¿®æ”¹ã€‘æŠŠ transform (è‡ªå·±) å‚³é€²å»
             health.TakeDamage(damageAmount, transform);
         }
     }
@@ -21,7 +21,7 @@ public class DamageSource : MonoBehaviour
 
         if (health != null)
         {
-            // ¡i­×§ï¡j§â transform (¦Û¤v) ¶Ç¶i¥h
+            // ã€ä¿®æ”¹ã€‘æŠŠ transform (è‡ªå·±) å‚³é€²å»
             health.TakeDamage(damageAmount, transform);
         }
     }

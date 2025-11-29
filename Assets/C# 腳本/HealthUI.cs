@@ -1,31 +1,31 @@
-using UnityEngine;
-using UnityEngine.UI; // °O±o¤Ş¥Î UI ©R¦WªÅ¶¡
-using System.Collections.Generic; // ¬°¤F¨Ï¥Î List
+ï»¿using UnityEngine;
+using UnityEngine.UI; // è¨˜å¾—å¼•ç”¨ UI å‘½åç©ºé–“
+using System.Collections.Generic; // ç‚ºäº†ä½¿ç”¨ List
 
 public class HealthUI : MonoBehaviour
 {
-    [Header("UI ³]©w")]
-    public GameObject heartPrefab;  // ¤ß¤ßªº¼Ë¥» (Prefab)
-    public Transform container;     // ®e¾¹ (HealthBar)
+    [Header("UI è¨­å®š")]
+    public GameObject heartPrefab;  // å¿ƒå¿ƒçš„æ¨£æœ¬ (Prefab)
+    public Transform container;     // å®¹å™¨ (HealthBar)
 
-    // ¬°¤FÂ²³æ¡A§Ú­Ì¥ÎÃC¦â°Ï¤À¡G¥Õ¦â=¦³¦å¡A¶Â¦â¥b³z©ú=¦©¦å
+    // ç‚ºäº†ç°¡å–®ï¼Œæˆ‘å€‘ç”¨é¡è‰²å€åˆ†ï¼šç™½è‰²=æœ‰è¡€ï¼Œé»‘è‰²åŠé€æ˜=æ‰£è¡€
     public Color fullColor = Color.white;
     public Color emptyColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 
-    // Àx¦s¥Í¦¨¥X¨Óªº¤ß¤ß¹Ï¤ù¦Cªí
+    // å„²å­˜ç”Ÿæˆå‡ºä¾†çš„å¿ƒå¿ƒåœ–ç‰‡åˆ—è¡¨
     private List<Image> hearts = new List<Image>();
 
-    // 1. ªì©l¤Æ¡G®Ú¾Ú³Ì¤j¦å¶q¥Í¦¨¹Ï¥Ü
+    // 1. åˆå§‹åŒ–ï¼šæ ¹æ“šæœ€å¤§è¡€é‡ç”Ÿæˆåœ–ç¤º
     public void InitHealth(int maxHealth)
     {
-        // ¥ı²MªÅÂÂªº (¨¾¤î­«½Æ¥Í¦¨)
+        // å…ˆæ¸…ç©ºèˆŠçš„ (é˜²æ­¢é‡è¤‡ç”Ÿæˆ)
         foreach (Transform child in container)
         {
             Destroy(child.gameObject);
         }
         hearts.Clear();
 
-        // ¥Í¦¨¹ïÀ³¼Æ¶qªº¤ß¤ß
+        // ç”Ÿæˆå°æ‡‰æ•¸é‡çš„å¿ƒå¿ƒ
         for (int i = 0; i < maxHealth; i++)
         {
             GameObject newHeart = Instantiate(heartPrefab, container);
@@ -33,19 +33,19 @@ public class HealthUI : MonoBehaviour
         }
     }
 
-    // 2. §ó·sÅã¥Ü¡G®Ú¾Ú·í«e¦å¶q§ïÅÜÃC¦â
+    // 2. æ›´æ–°é¡¯ç¤ºï¼šæ ¹æ“šç•¶å‰è¡€é‡æ”¹è®Šé¡è‰²
     public void UpdateHealth(int currentHealth)
     {
         for (int i = 0; i < hearts.Count; i++)
         {
             if (i < currentHealth)
             {
-                // ¦pªG¯Á¤Ş¤p©ó·í«e¦å¶q¡AÅã¥Üº¡¦åÃC¦â
+                // å¦‚æœç´¢å¼•å°æ–¼ç•¶å‰è¡€é‡ï¼Œé¡¯ç¤ºæ»¿è¡€é¡è‰²
                 hearts[i].color = fullColor;
             }
             else
             {
-                // §_«hÅã¥ÜªÅ¦åÃC¦â
+                // å¦å‰‡é¡¯ç¤ºç©ºè¡€é¡è‰²
                 hearts[i].color = emptyColor;
             }
         }
