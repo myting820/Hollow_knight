@@ -3,104 +3,130 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
+    // ==========================================
+    // 1. 變數宣告區
+    // ==========================================
     [Header("血量設定")]
     public int maxHealth = 5;
     public int currentHealth;
 
     [Header("無敵時間設定")]
-    public float invincibilityDuration = 0.75f; // 你剛剛調整的 0.75
+    public float invincibilityDuration = 0.75f;
     public float flashDuration = 0.08f;
 
     [Header("擊退設定")]
-    public float knockbackForceX = 10f; // 水平擊退力
-    public float knockbackForceY = 5f;  // 垂直擊退力 (稍微往上彈)
-    public float knockbackDuration = 0.2f; // 擊退失控時間
+    public float knockbackForceX = 10f;
+    public float knockbackForceY = 5f;
+    public float knockbackDuration = 0.2f;
 
+    [Header("參考組件")]
     public HealthUI healthUI;
+    public KeyItem currentKey; // 記錄當前持有的鑰匙
 
+    // 內部組件
     private bool isInvincible = false;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-
-    // 1. 新增：用來讀取主角移動狀態
     private PlayerMovement movement;
 
-    // 【新增】記錄當前持有的鑰匙
-    public KeyItem currentKey;
 
+    // ==========================================
+    // 2. 初始化與生命週期
+    // ==========================================
     void Start()
     {
         currentHealth = maxHealth;
+
+        // 抓取組件 (使用 GetComponentInChildren 以支援父子分離架構)
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-
-        // 2. 抓取同一物件身上的 PlayerMovement 組件
         movement = GetComponent<PlayerMovement>();
 
-        // 【新增】遊戲開始時，初始化 UI
+        // 初始化 UI
         if (healthUI != null)
         {
             healthUI.InitHealth(maxHealth);
-            healthUI.UpdateHealth(currentHealth); // 確保一開始是滿的
+            healthUI.UpdateHealth(currentHealth);
         }
     }
 
+
+    // ==========================================
+    // 3. 公開互動函式 (給外部呼叫用)
+    // ==========================================
+
+    // 受傷扣血 (給 DamageSource 呼叫)
     public void TakeDamage(int damage, Transform source = null)
     {
-        if (movement != null && movement.isDashing)
-        {
-            Debug.Log("衝刺無敵中，免疫傷害！");
-            return;
-        }
+        // A. 無敵/衝刺檢查
+        if (movement != null && movement.isDashing) return; // 衝刺無敵
+        if (isInvincible) return; // 受傷無敵
 
-        if (isInvincible) return;
-
-        // 【新增】受傷掉落鑰匙邏輯
+        // B. 掉落鑰匙
         if (currentKey != null)
         {
-            currentKey.Drop(); // 告訴鑰匙：你自己掉下去吧
-            currentKey = null; // 清空主角手上的鑰匙記錄
+            currentKey.Drop();
+            currentKey = null;
         }
 
+        // C. 扣血邏輯
         currentHealth -= damage;
         Debug.Log("玩家受傷！剩餘血量：" + currentHealth);
 
-        // 【新增】受傷時通知 UI 更新
-        if (healthUI != null)
-        {
-            healthUI.UpdateHealth(currentHealth);
-        }
+        // 更新 UI
+        if (healthUI != null) healthUI.UpdateHealth(currentHealth);
 
+        // 觸發動畫
         if (animator != null) animator.SetTrigger("HurtTrigger");
 
-        // --- 【新增】計算擊退 ---
+        // D. 執行擊退
         if (movement != null && source != null)
         {
-            // 1. 計算方向：(主角位置 - 敵人位置) = 往反方向飛
-            // 我們只關心左右方向，所以只看 x
             int direction = transform.position.x > source.position.x ? 1 : -1;
-
-            // 2. 組合力道向量 (X:反方向力道, Y:稍微向上)
             Vector2 knockbackVector = new Vector2(direction * knockbackForceX, knockbackForceY);
-
-            // 3. 呼叫 Movement 執行
             movement.ApplyKnockback(knockbackVector, knockbackDuration);
         }
 
+        // E. 死亡檢查
         if (currentHealth <= 0)
         {
             Die();
             return;
         }
 
+        // F. 開始無敵閃爍
         StartCoroutine(InvincibilityRoutine());
     }
 
-    // 【新增】撿起鑰匙的函式 (給 KeyItem 呼叫用的)
+    // 【新增】補滿血量 (給 RestPoint 長椅呼叫) -> 放在 TakeDamage 下面很合理
+    public void HealFull()
+    {
+        // 1. 數值補滿
+        currentHealth = maxHealth;
+
+        // 2. 狀態重置 (選用：如果坐椅子想順便解除無敵狀態)
+        isInvincible = false;
+        if (spriteRenderer != null) spriteRenderer.color = Color.white;
+
+        // 3. 更新 UI
+        if (healthUI != null)
+        {
+            healthUI.UpdateHealth(currentHealth);
+        }
+
+        Debug.Log("血量已補滿！");
+    }
+
+    // 撿起鑰匙 (給 KeyItem 呼叫)
     public void PickUpKey(KeyItem key)
     {
         currentKey = key;
     }
+
+
+    // ==========================================
+    // 4. 內部邏輯 (私有函式)
+    // ==========================================
 
     void Die()
     {
@@ -111,7 +137,6 @@ public class PlayerHealth : MonoBehaviour
     IEnumerator InvincibilityRoutine()
     {
         isInvincible = true;
-
         float endTime = Time.time + invincibilityDuration;
 
         while (Time.time < endTime)
@@ -131,9 +156,5 @@ public class PlayerHealth : MonoBehaviour
 
         if (spriteRenderer != null) spriteRenderer.color = Color.white;
         isInvincible = false;
-
-
     }
-
-
 }
