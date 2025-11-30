@@ -25,6 +25,9 @@ public class PlayerHealth : MonoBehaviour
     // 1. 新增：用來讀取主角移動狀態
     private PlayerMovement movement;
 
+    // 【新增】記錄當前持有的鑰匙
+    public KeyItem currentKey;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -51,6 +54,13 @@ public class PlayerHealth : MonoBehaviour
         }
 
         if (isInvincible) return;
+
+        // 【新增】受傷掉落鑰匙邏輯
+        if (currentKey != null)
+        {
+            currentKey.Drop(); // 告訴鑰匙：你自己掉下去吧
+            currentKey = null; // 清空主角手上的鑰匙記錄
+        }
 
         currentHealth -= damage;
         Debug.Log("玩家受傷！剩餘血量：" + currentHealth);
@@ -84,6 +94,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         StartCoroutine(InvincibilityRoutine());
+    }
+
+    // 【新增】撿起鑰匙的函式 (給 KeyItem 呼叫用的)
+    public void PickUpKey(KeyItem key)
+    {
+        currentKey = key;
     }
 
     void Die()
