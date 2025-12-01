@@ -124,6 +124,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
 
+
     // ==========================================
     // 4. 內部邏輯 (私有函式)
     // ==========================================
@@ -131,7 +132,11 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("玩家死亡！");
-        Time.timeScale = 0;
+        // 【修改】呼叫 GameManager 進行重生
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.RespawnPlayer();
+        }
     }
 
     IEnumerator InvincibilityRoutine()

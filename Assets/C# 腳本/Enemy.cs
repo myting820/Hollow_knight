@@ -19,13 +19,16 @@ public class Enemy : MonoBehaviour
     private Material originalMaterial;
     private Coroutine currentFlashRoutine;
     private bool isDying = false;
+    private Vector3 startPosition; // 記錄出生點
 
     void Awake()
     {
-        // 使用 GetComponentInChildren 以防你的圖片在子物件上
         sr = GetComponentInChildren<SpriteRenderer>();
         originalMaterial = sr.material;
         currentHealth = maxHealth;
+
+        // 【新增】記住一開始的位置
+        startPosition = transform.position;
     }
 
     public void TakeDamage(int damage)
@@ -77,6 +80,32 @@ public class Enemy : MonoBehaviour
         currentFlashRoutine = null;
     }
 
+    // 【新增】復活函式 (給 GameManager 呼叫)
+    public void ResetEnemy()
+    {
+        // 1. 恢復血量
+        currentHealth = maxHealth;
+        isDying = false; // 重置死亡狀態
+
+        // 2. 恢復位置
+        transform.position = startPosition;
+
+        // 3. 恢復顯示與物理
+        gameObject.SetActive(true); // 重新啟用物件
+
+        Collider2D col = GetComponent<Collider2D>();
+        if (col) col.enabled = true;
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb) rb.simulated = true;
+
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+        if (patrol) patrol.enabled = true;
+
+        // 確保材質變回來
+        if (sr != null) sr.material = originalMaterial;
+    }
+
     // 2. 死亡序列：閃兩下 -> 爆炸 -> 消失
     IEnumerator DeathSequenceRoutine()
     {
@@ -100,7 +129,8 @@ public class Enemy : MonoBehaviour
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         }
 
-        // 銷毀怪物
-        Destroy(gameObject);
+        // 【修改】不要 Destroy，改成關閉自己
+        // Destroy(gameObject); 
+        gameObject.SetActive(false);
     }
 }

@@ -2,33 +2,89 @@ using UnityEngine;
 
 public class FlyingShooter : MonoBehaviour
 {
-    [Header("飛行巡邏設定")]
+    [Header("基礎數值")]
     public float moveSpeed = 3f;
+    public float chaseSpeed = 4f;
+
+    [Header("AI 感知設定")]
+    public float detectionRange = 8f;
+    public float stoppingDistance = 4f;
+    public float retreatDistance = 3f;
+
+    [Header("巡邏與障礙設定")]
     public Transform wallCheck;
     public float checkDistance = 0.6f;
-    public LayerMask whatIsWall;
+    public LayerMask whatIsWall; // 這裡同時當作「巡邏撞牆偵測」和「視線阻擋偵測」
 
     [Header("射擊設定")]
-    public GameObject bulletPrefab; // 敵人子彈 Prefab
-    public Transform firePoint;     // 發射點
-    public float fireRate = 2f;     // 幾秒射一次
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float fireRate = 2f;
     private float nextFireTime;
 
+    private Transform player;
     private Rigidbody2D rb;
-    private int facingDirection = 1; // 1=右, -1=左
+    private int facingDirection = 1;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        nextFireTime = Time.time + fireRate; // 初始冷卻
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) player = playerObj.transform;
+
+        nextFireTime = Time.time + fireRate;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        // 1. 飛行移動
+        if (player == null)
+        {
+            PatrolLogic();
+            return;
+        }
+
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+        // --- 修改重點 ---
+        // 判斷條件變成了：距離夠近 且 (AND) 看得到玩家
+        if (distanceToPlayer < detectionRange && CanSeePlayer(distanceToPlayer))
+        {
+            EngagePlayer(distanceToPlayer);
+        }
+        else
+        {
+            // 看不到或是太遠 -> 回去巡邏
+            PatrolLogic();
+        }
+    }
+
+    // --- 新增：視線檢查函式 ---
+    bool CanSeePlayer(float distance)
+    {
+        // 1. 計算方向
+        Vector2 direction = (player.position - transform.position).normalized;
+
+        // 2. 發射射線，只偵測 whatIsWall (牆壁圖層)
+        // 注意：我們直接從 transform.position (身體中心) 發射即可
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, distance, whatIsWall);
+
+        // 3. 如果打到了東西 (hit.collider 不為空)，代表被牆壁擋住了
+        if (hit.collider != null)
+        {
+            // (選用) 畫紅線 Debug
+            Debug.DrawLine(transform.position, hit.point, Color.red);
+            return false; // 看不到
+        }
+
+        // (選用) 畫綠線 Debug
+        Debug.DrawLine(transform.position, player.position, Color.green);
+        return true; // 看得到
+    }
+
+    void PatrolLogic()
+    {
         rb.linearVelocity = new Vector2(moveSpeed * facingDirection, rb.linearVelocity.y);
 
-        // 2. 偵測牆壁 (碰到就回頭)
         bool hitWall = Physics2D.Raycast(wallCheck.position, transform.right, checkDistance, whatIsWall);
         if (hitWall)
         {
@@ -36,36 +92,44 @@ public class FlyingShooter : MonoBehaviour
         }
     }
 
-    void Update()
+    void EngagePlayer(float distance)
     {
-        // 3. 定時射擊
+        // 1. 面向玩家
+        if (player.position.x > transform.position.x && facingDirection == -1) Flip();
+        else if (player.position.x < transform.position.x && facingDirection == 1) Flip();
+
+        // 2. 移動邏輯
+        if (distance > stoppingDistance)
+        {
+            Vector2 direction = (player.position - transform.position).normalized;
+            rb.linearVelocity = direction * chaseSpeed;
+        }
+        else if (distance < retreatDistance)
+        {
+            Vector2 direction = (transform.position - player.position).normalized;
+            rb.linearVelocity = direction * chaseSpeed;
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        // 3. 射擊
         if (Time.time >= nextFireTime)
         {
-            Shoot();
+            AimAndShoot();
             nextFireTime = Time.time + fireRate;
         }
     }
 
-    void Shoot()
+    void AimAndShoot()
     {
         if (bulletPrefab != null && firePoint != null)
         {
-            // 1. 判斷現在怪物面向哪邊
-            // 如果 Scale X 是正的(1)，代表向右，角度就是 0
-            // 如果 Scale X 是負的(-1)，代表向左，角度就是 180 (繞 Y 軸轉半圈)
-            Quaternion bulletRotation;
-
-            if (transform.localScale.x > 0)
-            {
-                bulletRotation = Quaternion.identity; // 0度 (向右)
-            }
-            else
-            {
-                bulletRotation = Quaternion.Euler(0, 180, 0); // 180度 (向左)
-            }
-
-            // 2. 生成子彈時，傳入我們算好的 bulletRotation
-            Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+            Vector3 direction = player.position - firePoint.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion rotation = Quaternion.Euler(0, 0, angle);
+            Instantiate(bulletPrefab, firePoint.position, rotation);
         }
     }
 
@@ -73,11 +137,13 @@ public class FlyingShooter : MonoBehaviour
     {
         facingDirection *= -1;
         transform.localScale = new Vector3(facingDirection, 1, 1);
-        // 轉身時，發射點和偵測點會自動跟著轉過去
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
         if (wallCheck != null)
         {
             Gizmos.color = Color.blue;
