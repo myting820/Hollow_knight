@@ -1,25 +1,33 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class Enemy : MonoBehaviour
 {
     [Header("血量設定")]
     public int maxHealth = 3;
-    private int currentHealth;
 
     [Header("受擊特效設定")]
-    public Material flashMaterial;      // 記得拖入那個 Unlit 的純白材質
-    public float flashDuration = 0.15f; // 受擊閃爍時間 (原本0.1改長一點，0.15或0.2比較明顯)
+    public Material flashMaterial;
+    public float flashDuration = 0.15f;
 
     [Header("死亡特效設定")]
-    public float deathFlashInterval = 0.2f; // 死亡閃爍間隔 (設長一點，節奏感較強)
-    public GameObject explosionPrefab;      // 粒子爆炸 Prefab
+    public float deathFlashInterval = 0.2f;
+    public GameObject explosionPrefab;
 
+    [Header("擊退設定")] // 把這段搬上來，跟其他設定放在一起
+    public float knockbackForce = 5f;
+    public float stunDuration = 0.2f;
+
+    // --- 以下是內部私有變數 (Inspector 不會顯示) ---
+    private int currentHealth; // 雖然你原本寫在上面，但這是內部用的，不用顯示
     private SpriteRenderer sr;
     private Material originalMaterial;
     private Coroutine currentFlashRoutine;
     private bool isDying = false;
-    private Vector3 startPosition; // 記錄出生點
+    private Vector3 startPosition;
+    private Rigidbody2D rb;
+
 
     void Awake()
     {
@@ -29,26 +37,64 @@ public class Enemy : MonoBehaviour
 
         // 【新增】記住一開始的位置
         startPosition = transform.position;
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Transform source = null)
     {
         if (isDying) return;
 
         currentHealth -= damage;
-        Debug.Log(name + " 受到了 " + damage + " 點傷害！");
 
         if (currentHealth <= 0)
         {
-            Die(); // 這裡會處理死亡閃爍 -> 爆炸
+            Die();
         }
         else
         {
-            // --- 情況 A：受傷還沒死 ---
-            // 執行「受擊閃白」協程
+            // 1. 閃白特效
             if (currentFlashRoutine != null) StopCoroutine(currentFlashRoutine);
             currentFlashRoutine = StartCoroutine(HitFlashRoutine());
+
+            // 2. 【新增】執行擊退
+            if (source != null && rb != null)
+            {
+                // 計算方向：(怪物位置 - 攻擊者位置) = 往反方向飛
+                Vector2 direction = (transform.position - source.position).normalized;
+                // 稍微往上抬一點，避免磨擦地面
+                Vector2 knockbackDir = new Vector2(direction.x, 0.2f).normalized;
+
+                StartCoroutine(KnockbackRoutine(knockbackDir));
+            }
         }
+    }
+
+    IEnumerator KnockbackRoutine(Vector2 dir)
+    {
+        // A. 暫時關閉各種 AI 移動腳本
+        // (我們嘗試抓取所有可能的 AI 腳本，有的話就關掉)
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+        FlyingShooter flying = GetComponent<FlyingShooter>();
+        KamikazeAI kamikaze = GetComponent<KamikazeAI>();
+
+        if (patrol) patrol.enabled = false;
+        if (flying) flying.enabled = false;
+        if (kamikaze) kamikaze.enabled = false;
+
+        // B. 施加瞬間推力
+        // 先歸零速度，避免原本的移動慣性干擾
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
+
+        // C. 等待暈眩時間
+        yield return new WaitForSeconds(stunDuration);
+
+        // D. 恢復速度並重新開啟 AI
+        rb.linearVelocity = Vector2.zero; // 停下來
+        if (patrol) patrol.enabled = true;
+        if (flying) flying.enabled = true;
+        if (kamikaze) kamikaze.enabled = true;
     }
 
     void Die()

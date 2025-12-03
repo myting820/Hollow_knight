@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
         Enemy enemy = hitInfo.GetComponent<Enemy>();
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, transform);
             //DestroyProjectile(); // 撞到人就消失
         }
 

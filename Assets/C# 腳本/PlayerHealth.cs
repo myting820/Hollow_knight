@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Unity.Cinemachine;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private PlayerMovement movement;
+    private CinemachineImpulseSource impulseSource;
 
 
     // ==========================================
@@ -41,6 +43,7 @@ public class PlayerHealth : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
         movement = GetComponent<PlayerMovement>();
+        impulseSource = GetComponent<CinemachineImpulseSource>(); 
 
         // 初始化 UI
         if (healthUI != null)
@@ -69,9 +72,17 @@ public class PlayerHealth : MonoBehaviour
             currentKey = null;
         }
 
+
         // C. 扣血邏輯
         currentHealth -= damage;
         Debug.Log("玩家受傷！剩餘血量：" + currentHealth);
+
+        // 【新增】觸發震動！
+        // GenerateImpulseWithForce(1f) 代表使用 100% 的力道
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulseWithForce(1f);
+        }
 
         // 更新 UI
         if (healthUI != null) healthUI.UpdateHealth(currentHealth);
@@ -122,6 +133,8 @@ public class PlayerHealth : MonoBehaviour
     {
         currentKey = key;
     }
+
+
 
 
 
