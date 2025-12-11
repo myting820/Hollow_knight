@@ -1,0 +1,572 @@
+fileFormatVersion: 2
+guid: 18648cbfcc305a142b5d24f6118cfe77
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5716750555384415641
+    second: darkfairy_transformation_into_phase2_0
+  - first:
+      213: -7616379962313954948
+    second: darkfairy_transformation_into_phase2_1
+  - first:
+      213: -2518887122620659359
+    second: darkfairy_transformation_into_phase2_2
+  - first:
+      213: -2248061735593899060
+    second: darkfairy_transformation_into_phase2_3
+  - first:
+      213: 2482149444492456064
+    second: darkfairy_transformation_into_phase2_4
+  - first:
+      213: 6901469230807847577
+    second: darkfairy_transformation_into_phase2_5
+  - first:
+      213: 6150272679519646729
+    second: darkfairy_transformation_into_phase2_6
+  - first:
+      213: 3453653742210181190
+    second: darkfairy_transformation_into_phase2_7
+  - first:
+      213: -3713026181059825819
+    second: darkfairy_transformation_into_phase2_8
+  - first:
+      213: 6004249267367216699
+    second: darkfairy_transformation_into_phase2_9
+  - first:
+      213: 4741967674794019096
+    second: darkfairy_transformation_into_phase2_10
+  - first:
+      213: 4358778944129319418
+    second: darkfairy_transformation_into_phase2_11
+  - first:
+      213: 4230378711903547182
+    second: darkfairy_transformation_into_phase2_12
+  - first:
+      213: -1133481712974248033
+    second: darkfairy_transformation_into_phase2_13
+  - first:
+      213: 1316012221630555292
+    second: darkfairy_transformation_into_phase2_14
+  - first:
+      213: -2939008737446837565
+    second: darkfairy_transformation_into_phase2_15
+  - first:
+      213: -5843008791350433766
+    second: darkfairy_transformation_into_phase2_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_0
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 72
+        width: 22
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76a7bc498a50aa0b0800000000000000
+      internalID: -5716750555384415641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_1
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 72
+        width: 30
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c79afdf07ce2d4690800000000000000
+      internalID: -7616379962313954948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_2
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 72
+        width: 32
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 169c3e2f18d1b0dd0800000000000000
+      internalID: -2518887122620659359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_3
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 72
+        width: 38
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccb07c023c74dc0e0800000000000000
+      internalID: -2248061735593899060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_4
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 72
+        width: 38
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 080f76ec4cd527220800000000000000
+      internalID: 2482149444492456064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_5
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 72
+        width: 38
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 992179a23b1f6cf50800000000000000
+      internalID: 6901469230807847577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_6
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 72
+        width: 32
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 904fe8e9a682a5550800000000000000
+      internalID: 6150272679519646729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_7
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 109
+        width: 26
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 648e2a1c7c7ddef20800000000000000
+      internalID: 3453653742210181190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_8
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 67
+        width: 32
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56f243c5c5ea87cc0800000000000000
+      internalID: -3713026181059825819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_9
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b36825495e0635350800000000000000
+      internalID: 6004249267367216699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_10
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8198b78e97adec140800000000000000
+      internalID: 4741967674794019096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_11
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 7
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af1c74b1b5e7d7c30800000000000000
+      internalID: 4358778944129319418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_12
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 7
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2fa264660355ba30800000000000000
+      internalID: 4230378711903547182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_13
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f97c4c233601540f0800000000000000
+      internalID: -1133481712974248033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_14
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c94ac5e942a634210800000000000000
+      internalID: 1316012221630555292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_15
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 7
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c246b4ff1b8637d0800000000000000
+      internalID: -2939008737446837565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: darkfairy_transformation_into_phase2_16
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 7
+        width: 48
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a18a21c367679eea0800000000000000
+      internalID: -5843008791350433766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      darkfairy_transformation_into_phase2_0: -5716750555384415641
+      darkfairy_transformation_into_phase2_1: -7616379962313954948
+      darkfairy_transformation_into_phase2_10: 4741967674794019096
+      darkfairy_transformation_into_phase2_11: 4358778944129319418
+      darkfairy_transformation_into_phase2_12: 4230378711903547182
+      darkfairy_transformation_into_phase2_13: -1133481712974248033
+      darkfairy_transformation_into_phase2_14: 1316012221630555292
+      darkfairy_transformation_into_phase2_15: -2939008737446837565
+      darkfairy_transformation_into_phase2_16: -5843008791350433766
+      darkfairy_transformation_into_phase2_2: -2518887122620659359
+      darkfairy_transformation_into_phase2_3: -2248061735593899060
+      darkfairy_transformation_into_phase2_4: 2482149444492456064
+      darkfairy_transformation_into_phase2_5: 6901469230807847577
+      darkfairy_transformation_into_phase2_6: 6150272679519646729
+      darkfairy_transformation_into_phase2_7: 3453653742210181190
+      darkfairy_transformation_into_phase2_8: -3713026181059825819
+      darkfairy_transformation_into_phase2_9: 6004249267367216699
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
