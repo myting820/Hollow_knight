@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 using static Unity.VisualScripting.Member;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
     [Header("血量設定")]
     public int maxHealth = 3;
+
+    // Boss 專用血條 (一般小怪留空即可)
+    [Header("Boss 專用設定")]
+    public Slider bossHealthBar;
 
     [Header("受擊特效設定")]
     public Material flashMaterial;
@@ -20,7 +25,7 @@ public class Enemy : MonoBehaviour
     public float stunDuration = 0.2f;
 
     // --- 以下是內部私有變數 (Inspector 不會顯示) ---
-    private int currentHealth; // 雖然你原本寫在上面，但這是內部用的，不用顯示
+    public int currentHealth; // 雖然你原本寫在上面，但這是內部用的，不用顯示
     private SpriteRenderer sr;
     private Material originalMaterial;
     private Coroutine currentFlashRoutine;
@@ -47,6 +52,12 @@ public class Enemy : MonoBehaviour
 
         currentHealth -= damage;
 
+        // 【新增】如果有綁定血條 (Boss)，就更新 UI
+        if (bossHealthBar != null)
+        {
+            bossHealthBar.value = currentHealth;
+        }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -67,6 +78,16 @@ public class Enemy : MonoBehaviour
 
                 StartCoroutine(KnockbackRoutine(knockbackDir));
             }
+        }
+    }
+    // 【新增】Boss 出場時呼叫這個，初始化血條
+    public void ActivateBossUI()
+    {
+        if (bossHealthBar != null)
+        {
+            bossHealthBar.gameObject.SetActive(true); // 顯示血條
+            bossHealthBar.maxValue = maxHealth;       // 設定最大值
+            bossHealthBar.value = currentHealth;      // 設定當前值
         }
     }
 
@@ -101,6 +122,9 @@ public class Enemy : MonoBehaviour
     {
         isDying = true;
 
+        // 關閉血條 (如果有的話)
+        if (bossHealthBar != null) bossHealthBar.gameObject.SetActive(false);
+
         // 停止碰撞與物理，避免屍體擋路
         Collider2D col = GetComponent<Collider2D>();
         if (col) col.enabled = false;
@@ -111,6 +135,17 @@ public class Enemy : MonoBehaviour
         // 停止巡邏
         EnemyPatrol patrol = GetComponent<EnemyPatrol>();
         if (patrol) patrol.enabled = false;
+
+        // 嘗試關閉各種 AI
+        MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+        foreach (var script in scripts)
+        {
+            // 簡單粗暴地關閉所有名為 AI 或 Enemy 開頭的腳本 (除了自己)
+            if (script != this && (script.GetType().Name.Contains("AI") || script.GetType().Name.Contains("Enemy")))
+            {
+                script.enabled = false;
+            }
+        }
 
         // --- 情況 B：死亡 ---
         // 執行「死亡閃爍 -> 爆炸」協程
@@ -150,6 +185,14 @@ public class Enemy : MonoBehaviour
 
         // 確保材質變回來
         if (sr != null) sr.material = originalMaterial;
+
+        currentHealth = maxHealth;
+        isDying = false;
+        transform.position = startPosition;
+        gameObject.SetActive(true);
+        if (GetComponent<Collider2D>()) GetComponent<Collider2D>().enabled = true;
+        if (GetComponent<Rigidbody2D>()) GetComponent<Rigidbody2D>().simulated = true;
+        sr.material = originalMaterial;
     }
 
     // 2. 死亡序列：閃兩下 -> 爆炸 -> 消失
@@ -178,5 +221,6 @@ public class Enemy : MonoBehaviour
         // 【修改】不要 Destroy，改成關閉自己
         // Destroy(gameObject); 
         gameObject.SetActive(false);
+
     }
 }
