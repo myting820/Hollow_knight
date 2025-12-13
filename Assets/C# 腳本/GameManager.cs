@@ -1,81 +1,84 @@
 using UnityEngine;
-using System.Collections.Generic; // ¥Î¨Ó¨Ï¥Î List
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance; // ³æ¨Ò¼Ò¦¡ (Åı¤j®a³£¯à»´ÃP§ä¨ì¥¦)
+    public static GameManager instance;
 
-    [Header("ª¬ºAºÊ±±")]
-    public Vector3 respawnPoint; // ­«¥ÍÂI®y¼Ğ
+    [Header("ç‹€æ…‹ç›£æ§")]
+    public Vector3 respawnPoint;
 
     private PlayerHealth playerHealth;
     private GameObject playerObj;
-    private List<Enemy> allEnemies = new List<Enemy>(); // ³õ´º¤W©Ò¦³¼Ä¤Hªº¦W³æ
+    private List<Enemy> allEnemies = new List<Enemy>();
+
+    // â˜… æ–°å¢ï¼šç”¨ä¾†å­˜æ‰€æœ‰çš„ Boss è§¸ç™¼å™¨
+    private List<BossTrigger> allTriggers = new List<BossTrigger>();
 
     void Awake()
     {
-        // ³]©w³æ¨Ò (½T«O¥u¦³¤@­ÓºŞ²z¾¹)
         if (instance == null) instance = this;
         else Destroy(gameObject);
     }
 
     void Start()
     {
-        // 1. §ì¨ú¥D¨¤
+        // æŠ“å–ä¸»è§’
         playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
             playerHealth = playerObj.GetComponent<PlayerHealth>();
-            // ¹w³]­«¥ÍÂI = ¹CÀ¸¶}©l®É¥D¨¤ªº¦ì¸m
             respawnPoint = playerObj.transform.position;
         }
 
-        // 2. §ì¨ú³õ´º¤W©Ò¦³ªº¼Ä¤H¡A¦s¤J¦W³æ
+        // æŠ“å–æ‰€æœ‰æ•µäºº
         Enemy[] enemies = FindObjectsOfType<Enemy>();
         foreach (Enemy enemy in enemies)
         {
             allEnemies.Add(enemy);
         }
+
+        // â˜… æ–°å¢ï¼šæŠ“å–æ‰€æœ‰ BossTrigger
+        BossTrigger[] triggers = FindObjectsOfType<BossTrigger>();
+        foreach (BossTrigger trigger in triggers)
+        {
+            allTriggers.Add(trigger);
+        }
     }
 
     void Update()
     {
-        // ´ú¸Õ¥\¯à¡G«ö R Áä¦Û±ş/­«¥Í
         if (Input.GetKeyDown(KeyCode.R))
         {
             RespawnPlayer();
         }
     }
 
-    // §ó·s¦sÀÉÂI (µ¹ªø´È©I¥s)
     public void UpdateCheckpoint(Vector3 newPos)
     {
         respawnPoint = newPos;
-        Debug.Log("¦sÀÉÂI¤w§ó·s¡I");
+        Debug.Log("å­˜æª”é»å·²æ›´æ–°ï¼");
     }
 
-    // °õ¦æ­«¥Í¬yµ{
     public void RespawnPlayer()
     {
-        Debug.Log("­«¥Í¤¤...");
+        Debug.Log("é‡ç”Ÿä¸­...");
 
-        // 1. ­«¸m¥D¨¤¦ì¸m
+        // 1. é‡ç½®ä¸»è§’ä½ç½®
         if (playerObj != null)
         {
             playerObj.transform.position = respawnPoint;
-
-            // Åıª«²z³t«×Âk¹s (Á×§K±aµÛºD©Ê­¸¥X¥h)
             Rigidbody2D rb = playerObj.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
 
-        // 2. ­«¸m¥D¨¤ª¬ºA (¸Éº¡¦å)
+        // 2. é‡ç½®ä¸»è§’ç‹€æ…‹
         if (playerHealth != null)
         {
             playerHealth.HealFull();
         }
 
-        // 3. ­«¸m©Ò¦³¼Ä¤H
+        // 3. é‡ç½®æ‰€æœ‰æ•µäºº
         foreach (Enemy enemy in allEnemies)
         {
             if (enemy != null)
@@ -83,5 +86,14 @@ public class GameManager : MonoBehaviour
                 enemy.ResetEnemy();
             }
         }
+
+        // â˜… æ–°å¢ï¼šé‡ç½®æ‰€æœ‰ Boss è§¸ç™¼å™¨
+        foreach (BossTrigger trigger in allTriggers)
+        {
+            if (trigger != null)
+            {
+                trigger.ResetTrigger();
+            }
+        }
     }
-}
+} // <--- é€™è£¡åŸæœ¬å¯èƒ½å°‘äº†ä¸€å€‹æ‹¬è™Ÿ (error CS1513)

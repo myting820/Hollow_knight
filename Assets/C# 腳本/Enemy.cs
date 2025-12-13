@@ -186,13 +186,24 @@ public class Enemy : MonoBehaviour
         // 確保材質變回來
         if (sr != null) sr.material = originalMaterial;
 
-        currentHealth = maxHealth;
-        isDying = false;
-        transform.position = startPosition;
-        gameObject.SetActive(true);
-        if (GetComponent<Collider2D>()) GetComponent<Collider2D>().enabled = true;
-        if (GetComponent<Rigidbody2D>()) GetComponent<Rigidbody2D>().simulated = true;
-        sr.material = originalMaterial;
+        // ★【新增這段】強制關閉血條 UI
+        // 因為回到記憶點時，戰鬥還沒開始，不該看到血條
+        // 判斷：如果有綁定「Boss 血條」，代表我是 Boss
+        if (bossHealthBar != null)
+        {
+            // 如果是 Boss：
+            // 1. 隱藏血條 UI
+            bossHealthBar.gameObject.SetActive(false);
+            
+            // 2. 【新增】把 Boss 本體也關掉！(讓它乖乖睡覺，等 Trigger 叫醒它)
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            // 如果是普通小怪：
+            // 直接復活顯示
+            gameObject.SetActive(true);
+        }
     }
 
     // 2. 死亡序列：閃兩下 -> 爆炸 -> 消失

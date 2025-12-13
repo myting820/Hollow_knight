@@ -3,144 +3,148 @@ using System.Collections;
 
 public class DarkFairyBoss : MonoBehaviour
 {
-    [Header("®Ö¤ß°Ñ¦Ò")]
+    [Header("åƒè€ƒç‰©ä»¶")]
     public Transform player;
-    public Transform[] teleportPoints; // ¶Ç°eÂI°}¦C
-    public GameObject meleeArea;       // ­è­è°µªºªñ¾Ô§P©w®Ø
-    public GameObject magicPrefab;     // Å]ªk°} Prefab
+    public Transform[] teleportPoints; // å‚³é€é»é™£åˆ—
+    public GameObject meleeArea;       // è¿‘æˆ°æ”»æ“Šåˆ¤å®šå€
+    public GameObject magicPrefab;     // é­”æ³•çƒ Prefab
 
-    [Header("¾Ô°«¼Æ­È")]
+    [Header("æ•¸å€¼è¨­å®š")]
     public float moveSpeed = 2f;
-    public float meleeRange = 2.5f;    // ªñ¾ÔÄ²µo¶ZÂ÷ (¾a¤Óªñ)
-    public float attackRange = 8f;     // »·µ{Ä²µo¶ZÂ÷
-    public float teleportCooldown = 5f;
+    public float meleeRange = 2.5f;    // è¿‘æˆ°è§¸ç™¼è·é›¢ï¼ˆåœ°é¢ï¼‰
+    public float teleportRange = 4.0f;  // ã€æ–°å¢ã€‘ç¶ è‰²åœˆåœˆ (è§¸ç™¼é€ƒè·‘çš„è·é›¢)
+    public float attackRange = 8f;     // é ç¨‹è§¸ç™¼è·é›¢
+    public float teleportCooldown = 8f;
 
-    [Header("ª¬ºAºÊ±±")]
-    public bool isActing = false;      // ¬O§_¥¿¦b°µ°Ê§@ (µwª½¤¤)
+    [Header("æ”»æ“Šé »ç‡ (æ•¸å­—è¶Šå°æ‰“è¶Šå¿«)")]
+    public float spellInterval = 2.0f;  // æ”¾å®Œé­”æ³•å¾Œçš„ç™¼å‘†æ™‚é–“
+    public float meleeInterval = 1.0f;  // ç å®Œå¾Œçš„ç™¼å‘†æ™‚é–“
+
+    [Header("ç‹€æ…‹æ§åˆ¶")]
+    public bool isActing = false;      // æ˜¯å¦æ­£åœ¨åŸ·è¡Œå‹•ä½œï¼ˆæ”»æ“Š / å‚³é€ï¼‰
     private float nextTeleportTime;
     private Animator anim;
-    private int facingDirection = 1;   // 1¦V¥k, -1¦V¥ª
+    private int facingDirection = 1;   // 1 å‘å³, -1 å‘å·¦
 
     void Start()
     {
         anim = GetComponent<Animator>();
 
-        // ¦Û°Ê§ìª±®a
+        // è‡ªå‹•å°‹æ‰¾ç©å®¶
         if (player == null)
         {
             GameObject p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) player = p.transform;
         }
 
-        // ½T«Oªñ¾Ô®Ø¤@¶}©l¬OÃöªº
+        // ç¢ºä¿è¿‘æˆ°åˆ¤å®šä¸€é–‹å§‹æ˜¯é—œé–‰çš„
         if (meleeArea != null) meleeArea.SetActive(false);
     }
 
     void Update()
     {
-        // ¦pªGª±®a¦º¤F¡A©Î Boss ¥¿¦b¦£(§ğÀ»/Àş²¾)¡A´N¤£­n°Ê
+        // å¦‚æœç©å®¶ä¸å­˜åœ¨ï¼Œæˆ– Boss æ­£åœ¨åŸ·è¡Œå‹•ä½œï¼ˆæ”»æ“Š / å‚³é€ï¼‰ï¼Œå°±ä¸åšäº‹
         if (player == null || isActing) return;
 
         float distance = Vector2.Distance(transform.position, player.position);
 
-        // --- ­±¦Vª±®a ---
-        //Flip towards player
+        // --- é¢å‘ç©å®¶ ---
+        // Flip towards player
         if (player.position.x > transform.position.x && facingDirection == -1) Flip();
         else if (player.position.x < transform.position.x && facingDirection == 1) Flip();
 
+        // --- AI æ±ºç­–æ¨¹ (é‚è¼¯å¤§ä¿®) ---
 
-        // --- AI ¨Mµ¦¾ğ ---
-
-        // 1. ª±®a¶KÁy -> ªñ¾Ô§ğÀ»
-        if (distance <= meleeRange)
-        {
-            StartCoroutine(MeleeAttackRoutine());
-        }
-        // 2. ª±®a¤Óªñ¦ı¨S¶KÁy -> Àş²¾©Ô¶}¶ZÂ÷ (¦pªG§N«o¦n¤F)
-        else if (distance < 4f && Time.time > nextTeleportTime)
+        // ã€å„ªå…ˆç´š 1ã€‘ä¿å‘½è¦ç·Šï¼šå¦‚æœç©å®¶é€²å…¥ã€Œé€ƒè·‘åœˆ(ç¶ )ã€ ä¸” å†·å»å¥½äº† -> ç¬ç§»é€ƒèµ°
+        // é€™æ¨£å°±ç®—ç©å®¶è²¼è‡‰(åœ¨ç´…åœˆå…§)ï¼Œåªè¦å†·å»å¥½ï¼Œå¥¹ä¹Ÿæœƒå„ªå…ˆé¸æ“‡é€ƒè·‘è€Œä¸æ˜¯æ®åˆ€
+        if (distance <= teleportRange && Time.time > nextTeleportTime)
         {
             StartCoroutine(TeleportRoutine());
         }
-        // 3. ¶ZÂ÷¾A¤¤ -> µo®gÅ]ªk
+        // ã€å„ªå…ˆç´š 2ã€‘æ²’å¾—é€ƒ(å†·å»ä¸­)ä¸”è²¼è‡‰ -> è¢«è¿«è¿‘æˆ°åæ“Š
+        else if (distance <= meleeRange)
+        {
+            StartCoroutine(MeleeAttackRoutine());
+        }
+        // ã€å„ªå…ˆç´š 3ã€‘è·é›¢é©ä¸­ -> ç™¼å°„é­”æ³•
         else if (distance <= attackRange)
         {
             StartCoroutine(CastSpellRoutine());
         }
-        // 4. ¤Ó»· -> ­¸¹L¥h
+        // ã€å„ªå…ˆç´š 4ã€‘å¤ªé  -> è¿½æ“Š
         else
         {
             transform.position = Vector2.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
         }
+    
     }
 
-    // --- §Ş¯à 1: »·µ{Å]ªk ---
+    // --- æŠ€èƒ½ 1ï¼šé ç¨‹é­”æ³• ---
     IEnumerator CastSpellRoutine()
     {
         isActing = true;
-        anim.SetTrigger("Cast"); // ¼½©ñ©ï¤â°Êµe
+        anim.SetTrigger("Cast"); // æ’­æ”¾æ–½æ³•å‹•ç•«
 
-        // µ¥«İ°Êµeºt¨ì¤@¥b (¨Ò¦p 0.5¬í) ¤~¥Í¦¨Å]ªk
+        // ç­‰å‹•ç•«å‰æ–ï¼ˆä¾‹å¦‚ 0.5 ç§’ï¼‰
         yield return new WaitForSeconds(0.5f);
 
         if (magicPrefab != null)
         {
-            // ¦bª±®a¸}¤U¥Í¦¨Å]ªk°} (©Î¬O Boss «e¤è¡A¬İ§A·Q«ç¼Ë)
-            // ³o¸Ì³]©w¬°¡Gª½±µ¦bª±®a·í«e¦ì¸m¥Í¦¨ (°lÂÜ)
+            // åœ¨ç©å®¶ä½ç½®ç”Ÿæˆé­”æ³•çƒï¼ˆè¿½è¹¤å‹æˆ–å®šé»å‹ï¼‰
             Instantiate(magicPrefab, player.position, Quaternion.identity);
         }
 
-        // µ¥«İ«á·n (¥ğ®§¤@¤U)
-        yield return new WaitForSeconds(1f);
+        // æ”»æ“Šå¾Œç¡¬ç›´
+        yield return new WaitForSeconds(spellInterval);
         isActing = false;
     }
 
-    // --- §Ş¯à 2: ªñ¾Ô§ğÀ» ---
+    // --- æŠ€èƒ½ 2ï¼šè¿‘æˆ°æ”»æ“Š ---
     IEnumerator MeleeAttackRoutine()
     {
         isActing = true;
-        anim.SetTrigger("Melee"); // ¼½©ñ´§¤M°Êµe
+        anim.SetTrigger("Melee"); // æ’­æ”¾è¿‘æˆ°å‹•ç•«
 
-        // «e·n¡Gµ¥«İ¤M¤l´§¤U¥hªº¨º¤@¨è
+        // å‰æ–
         yield return new WaitForSeconds(0.4f);
 
-        // ¶}±Ò¶Ë®`§P©w
+        // é–‹å•Ÿæ”»æ“Šåˆ¤å®š
         if (meleeArea != null) meleeArea.SetActive(true);
 
-        // §P©w«ùÄò®É¶¡ (¤M¤l´§¹Lªº®É¶¡)
-        yield return new WaitForSeconds(0.2f);
+        // åˆ¤å®šæŒçºŒæ™‚é–“
+        yield return new WaitForSeconds(1.5f);
 
-        // Ãö³¬¶Ë®`§P©w
+        // é—œé–‰æ”»æ“Šåˆ¤å®š
         if (meleeArea != null) meleeArea.SetActive(false);
 
-        // «á·n
-        yield return new WaitForSeconds(0.5f);
+        // å¾Œæ–
+        yield return new WaitForSeconds(meleeInterval);
         isActing = false;
     }
 
-    // --- §Ş¯à 3: Àş²¾ (Hit & Run) ---
+    // --- æŠ€èƒ½ 3ï¼šç¬ç§»ï¼ˆHit & Runï¼‰ ---
     IEnumerator TeleportRoutine()
     {
         isActing = true;
-        anim.SetTrigger("Teleport"); // 1. ¼½©ñ®ø¥¢°Êµe (Out)
+        anim.SetTrigger("Teleport"); // æ¶ˆå¤±å‹•ç•«ï¼ˆOutï¼‰
 
-        // µ¥«İ®ø¥¢°Êµe¼½§¹ (°²³] 0.5¬í)
+        // ç­‰æ¶ˆå¤±å‹•ç•«çµæŸ
         yield return new WaitForSeconds(0.5f);
 
-        // 2. ¯u¥¿ªº¦ì²¾ (§ïÅÜ®y¼Ğ)
-        // ÀH¾÷¿ï¤@­Ó¶Ç°eÂI
+        // éš¨æ©Ÿé¸ä¸€å€‹å‚³é€é»
         if (teleportPoints.Length > 0)
         {
             int randIndex = Random.Range(0, teleportPoints.Length);
             transform.position = teleportPoints[randIndex].position;
         }
 
-        // 3. ¼½©ñ¥X²{°Êµe (In - ¤]´N¬O­Ë±a)
+        // å‡ºç¾å‹•ç•«ï¼ˆInï¼‰
         anim.SetTrigger("Appear");
 
-        // µ¥«İ¥X²{°Êµe¼½§¹
+        // ç­‰å‡ºç¾å‹•ç•«
         yield return new WaitForSeconds(0.5f);
 
-        // ³]©w§N«o®É¶¡
+        // è¨­å®šå‚³é€å†·å»æ™‚é–“
         nextTeleportTime = Time.time + teleportCooldown;
         isActing = false;
     }
@@ -148,14 +152,25 @@ public class DarkFairyBoss : MonoBehaviour
     void Flip()
     {
         facingDirection *= -1;
-        transform.localScale = new Vector3(facingDirection * Mathf.Abs(transform.localScale.x), transform.localScale.y, 1);
+        transform.localScale = new Vector3(
+            facingDirection * Mathf.Abs(transform.localScale.x),
+            transform.localScale.y,
+            1
+        );
     }
 
-    // µe¥X§ğÀ»½d³ò (¤è«K°£¿ù)
+    // åœ¨ Scene è¦–çª—é¡¯ç¤ºæ”»æ“Šç¯„åœï¼ˆæ–¹ä¾¿èª¿æ•´ï¼‰
     void OnDrawGizmosSelected()
     {
+        // ç´…è‰²ï¼šè¿‘æˆ°æ”»æ“Šç¯„åœ (è²¼è‡‰)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, meleeRange);
+
+        // ç¶ è‰²ï¼šé€ƒè·‘è§¸ç™¼ç¯„åœ (æ¯”è¿‘æˆ°å¤§ä¸€é»)
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, teleportRange);
+
+        // é»ƒè‰²ï¼šé­”æ³•æ”»æ“Šç¯„åœ
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }

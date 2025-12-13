@@ -28,4 +28,10 @@ public class BossTrigger : MonoBehaviour
             }
         }
     }
+
+    // ★ 新增的重置函式，必須放在 OnTriggerEnter2D 的外面 (但在 class 裡面)
+    public void ResetTrigger()
+    {
+        hasTriggered = false; 
+    }
 }
