@@ -147,6 +147,21 @@ public class Enemy : MonoBehaviour
             }
         }
 
+        // ============================================
+        // 【新增這一段】檢查我是不是 Boss？是的話就贏了！
+        // ============================================
+        
+        // 判斷方法 1：檢查有沒有掛 Boss 專用腳本
+        if (GetComponent<DarkFairyBoss>() != null)
+        {
+            // 呼叫 GameManager 的勝利畫面 (延遲一點點更有感覺)
+            if (GameManager.instance != null)
+            {
+                // 我們用 Invoke 稍微延遲 1.5 秒，讓玩家欣賞完爆炸特效再跳出勝利
+                GameManager.instance.Invoke("GameWin", 1.5f); 
+            }
+        }
+
         // --- 情況 B：死亡 ---
         // 執行「死亡閃爍 -> 爆炸」協程
         StartCoroutine(DeathSequenceRoutine());

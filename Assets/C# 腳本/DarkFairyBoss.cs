@@ -26,6 +26,9 @@ public class DarkFairyBoss : MonoBehaviour
     private Animator anim;
     private int facingDirection = 1;   // 1 向右, -1 向左
 
+    // 【新增 1】用來記錄 Boss 一開始的位置
+    private Vector3 startPos;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -39,6 +42,9 @@ public class DarkFairyBoss : MonoBehaviour
 
         // 確保近戰判定一開始是關閉的
         if (meleeArea != null) meleeArea.SetActive(false);
+
+        // 記住出生位置
+        startPos = transform.position;
     }
 
     void Update()
@@ -78,6 +84,39 @@ public class DarkFairyBoss : MonoBehaviour
         }
     
     }
+    // 【新增 3】這就是我們要呼叫的重置功能
+    public void ResetBoss()
+    {
+        // 1. 強制停止所有進行中的技能 (很重要！不然 Coroutine 會繼續跑)
+        StopAllCoroutines();
+
+        // 2. 解鎖大腦，讓變數回歸 false
+        isActing = false;
+
+        // 3. 【新增】重新尋找玩家 (這一步超級重要！)
+        // 因為重生後的玩家是「新的人」，Boss 手上的舊資料已經過期了
+        if (player == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) player = p.transform;
+        }
+        
+        // 4. 關閉攻擊判定框 (避免重生瞬間玩家被打)
+        if (meleeArea != null) meleeArea.SetActive(false);
+
+        // 5. 回到出生點
+        transform.position = startPos;
+        
+        // 6. 重置動畫狀態 (避免卡在舉手動作)
+        if (anim != null)
+        {
+            anim.Rebind(); // 強制重置 Animator 到初始狀態
+            anim.Update(0f); 
+        }
+
+        Debug.Log("Boss 已重置！");
+    }
+
 
     // --- 技能 1：遠程魔法 ---
     IEnumerator CastSpellRoutine()
