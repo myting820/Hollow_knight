@@ -49,10 +49,8 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage, Transform source = null)
     {
         if (isDying) return;
-
         currentHealth -= damage;
 
-        // 【新增】如果有綁定血條 (Boss)，就更新 UI
         if (bossHealthBar != null)
         {
             bossHealthBar.value = currentHealth;
@@ -64,22 +62,20 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // 1. 閃白特效
+            // 特效
             if (currentFlashRoutine != null) StopCoroutine(currentFlashRoutine);
             currentFlashRoutine = StartCoroutine(HitFlashRoutine());
 
-            // 2. 【新增】執行擊退
+            // 擊退
             if (source != null && rb != null)
             {
-                // 計算方向：(怪物位置 - 攻擊者位置) = 往反方向飛
                 Vector2 direction = (transform.position - source.position).normalized;
-                // 稍微往上抬一點，避免磨擦地面
-                Vector2 knockbackDir = new Vector2(direction.x, 0.2f).normalized;
-
+                Vector2 knockbackDir = new Vector2(direction.x, 0.2f).normalized;// 避免磨擦地面
                 StartCoroutine(KnockbackRoutine(knockbackDir));
             }
         }
     }
+
     // 【新增】Boss 出場時呼叫這個，初始化血條
     public void ActivateBossUI()
     {
@@ -121,37 +117,27 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         isDying = true;
-
-        // 關閉血條 (如果有的話)
         if (bossHealthBar != null) bossHealthBar.gameObject.SetActive(false);
 
-        // 停止碰撞與物理，避免屍體擋路
         Collider2D col = GetComponent<Collider2D>();
         if (col) col.enabled = false;
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb) rb.simulated = false; // 停止物理模擬
+        if (rb) rb.simulated = false;
 
-        // 停止巡邏
         EnemyPatrol patrol = GetComponent<EnemyPatrol>();
         if (patrol) patrol.enabled = false;
 
-        // 嘗試關閉各種 AI
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (var script in scripts)
         {
-            // 簡單粗暴地關閉所有名為 AI 或 Enemy 開頭的腳本 (除了自己)
             if (script != this && (script.GetType().Name.Contains("AI") || script.GetType().Name.Contains("Enemy")))
             {
                 script.enabled = false;
             }
         }
 
-        // ============================================
-        // 【新增這一段】檢查我是不是 Boss？是的話就贏了！
-        // ============================================
-        
-        // 判斷方法 1：檢查有沒有掛 Boss 專用腳本
+
         if (GetComponent<DarkFairyBoss>() != null)
         {
             // 呼叫 GameManager 的勝利畫面 (延遲一點點更有感覺)

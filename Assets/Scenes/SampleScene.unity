@@ -931,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11e8d3917e1ad84dba045c8c29fc275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  maxHealth: 500
+  maxHealth: 300
   bossHealthBar: {fileID: 150884015}
   flashMaterial: {fileID: 0}
   flashDuration: 0.15
