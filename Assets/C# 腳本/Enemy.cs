@@ -198,12 +198,16 @@ public class Enemy : MonoBehaviour
         EnemyPatrol patrol = GetComponent<EnemyPatrol>();
         if (patrol) patrol.enabled = true;
 
+        KamikazeAI kamikaze = GetComponent<KamikazeAI>(); 
+        if (kamikaze) kamikaze.enabled = true;
+
+        FlyingShooter flyer = GetComponent<FlyingShooter>(); 
+        if (flyer) flyer.enabled = true;
+
         // 確保材質變回來
         if (sr != null) sr.material = originalMaterial;
 
-        // ★【新增這段】強制關閉血條 UI
-        // 因為回到記憶點時，戰鬥還沒開始，不該看到血條
-        // 判斷：如果有綁定「Boss 血條」，代表我是 Boss
+        // 5. 判斷是 Boss 還是小怪
         if (bossHealthBar != null)
         {
             // 如果是 Boss：
